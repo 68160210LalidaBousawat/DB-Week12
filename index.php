@@ -74,7 +74,7 @@ function e($value) {
     <title><?php echo $profile ? e($profile['full_name']) : 'My Resume'; ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -148,26 +148,32 @@ function e($value) {
         <?php if (count($trainings) > 0): ?>
             <div class="cert-grid">
                 <?php foreach ($trainings as $training): ?>
-                    <?php $cert_src = 'assets/images/' . (!empty($training['certificates']) ? $training['certificates'] : 'Certificate.jpg'); ?>
+                    <?php
+                    // Text-only card. It becomes a link to the lightbox only when a certificate image really exists.
+                    $cert_file = basename((string)($training['certificates'] ?? ''));
+                    $cert_src  = 'assets/images/' . $cert_file;
+                    $has_cert  = $cert_file !== '' && is_file(__DIR__ . '/' . $cert_src);
+                    ?>
+                    <?php if ($has_cert): ?>
                     <a class="cert"
                        href="<?php echo e($cert_src); ?>"
                        target="_blank"
                        data-title="<?php echo e($training['course_name']); ?>"
                        data-org="<?php echo e($training['organization']); ?>"
                        data-year="<?php echo e($training['training_year']); ?>">
-                        <div class="cert-thumb">
-                            <img class="certificates"
-                                 src="<?php echo e($cert_src); ?>"
-                                 alt="Certificate for <?php echo e($training['course_name']); ?>"
-                                 loading="lazy">
-                            <span class="cert-zoom">View full version</span>
-                        </div>
+                    <?php else: ?>
+                    <div class="cert">
+                    <?php endif; ?>
+                        <span class="cert-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="m8.5 13.8-1.5 7.2 5-3 5 3-1.5-7.2"/></svg>
+                        </span>
                         <div class="cert-body">
                             <h3><?php echo e($training['course_name']); ?></h3>
                             <p class="meta"><?php echo e($training['organization']); ?></p>
                             <span class="year"><?php echo e($training['training_year']); ?></span>
+                            <?php if ($has_cert): ?><span class="cert-link">View certificate &rarr;</span><?php endif; ?>
                         </div>
-                    </a>
+                    <?php echo $has_cert ? '</a>' : '</div>'; ?>
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
@@ -198,7 +204,7 @@ function e($value) {
 
 <script>
 (function () {
-    const cards = Array.from(document.querySelectorAll('.cert'));
+    const cards = Array.from(document.querySelectorAll('a.cert'));
     const box = document.getElementById('lightbox');
     if (!cards.length || !box || typeof box.showModal !== 'function') return;
 
