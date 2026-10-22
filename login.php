@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
  }
 }
 ?>
-<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Login</title><link rel="stylesheet" href="assets/css/crud.css"></head><body><main class="wrap"><div class="panel"><h1>Resume Lab Â· Login</h1><p>PHP Session + MySQL Authentication</p>
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Login</title><link rel="stylesheet" href="assets/css/crud.css"></head><body><main class="wrap"><div class="panel"><h1>Resume Lab · Login</h1><p>PHP Session + MySQL Authentication</p>
 <?php if(isset($_GET['registered'])): ?><p class="ok">Registration complete. Please login.</p><?php endif; ?>
 <?php if(isset($_GET['logged_out'])): ?><p class="ok">Logged out.</p><?php endif; ?>
 <?php if($error): ?><p class="err"><?=auth_escape($error)?></p><?php endif; ?>
